@@ -12,18 +12,36 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- 引入bootstrap的css文件 -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'mystyle.css' %}">
+
 </head>
 
 <body>
     <!-- 引入导航栏 -->
     {% include 'header.html' %}
+        <div class="container">
+        <div class="row">
+    <div class="col-md-2">
+            {% load my_tags %}
+
+            {% get_left_menu request.user.username %}
+        </div>
+        <div class="col-md-8">
+             {% block content %}{% endblock content %}
+</div>
+        <div class="col-md-2">
+            {% load my_tags %}
+
+            {% get_left_menu request.user.username %}
+        </div>
+         </div>
+         </div>
     <!-- 预留具体页面的位置 -->
-    {% block content %}{% endblock content %}
+
     <!-- 引入注脚 -->
     {% include 'footer.html' %}
     <!-- bootstrap.js 依赖 jquery.js 和popper.js，因此在这里引入 -->
-    <script src="{% static 'jquery/jquery-3.3.1.js' %}"></script>
-    <script src="{% static 'popper/popper-1.14.4.js' %}"></script>
+    <script src="{% static 'jquery-3.3.1.js' %}"></script>
     <!-- 引入bootstrap的js文件 -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 </body>

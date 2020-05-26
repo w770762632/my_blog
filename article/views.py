@@ -96,7 +96,7 @@ def index(request):
     article_list = models.Article.objects.all()
     # print(request.user.username)
 
-    p = Paginator(article_list, 3,)
+    p = Paginator(article_list, 3, )
     laws = p.page(page)
     print(laws)
     print(locals())
@@ -166,7 +166,6 @@ def logout(request):
 
 
 def home(request, user):
-    print(user)
     username = models.UserInfo.objects.filter(username=user).first()
     if not username:
         logger.warning("又有人访问不存在页面了...")
@@ -175,13 +174,10 @@ def home(request, user):
     # 获取当前页, 有则为page,无则默认为1
     try:
         page = request.GET.get('page', 1)
-        print(page,type(page))
     except PageNotAnInteger:
         page = 1
-    p = Paginator(article_list,5)
+    p = Paginator(article_list, 5)
     page_list = p.page(page)
-    print(page_list)
-    print(locals())
     return render(request, 'home.html', locals())
 
 

@@ -64,6 +64,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            # 'libraries': {
+            #     "my_tags": "article.templatetags.my_tags",
+            # },
         },
     },
 ]
@@ -130,6 +133,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PAGINATION_SETTINGS = {
-    'PAGE_RANGE_DISPLAYED': 5,
+    'PAGE_RANGE_DISPLAYED': 4,
     'MARGIN_PAGES_DISPLAYED': 2,
     'SHOW_FIRST_PAGE_WHEN_INVALID': True, }

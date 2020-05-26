@@ -27,7 +27,7 @@ def foo(request):
 
 
 def test(request):
-    return render(request,'test.html')
+    return render(request,'index2.html')
 
 
 urlpatterns = [
