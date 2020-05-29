@@ -1,106 +1,66 @@
 {% extends 'base.html' %}
-
 {% include 'header.html' %}
 <!-- 主页面 开始-->
-
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">左侧广告位一</div>
-                    <div class="panel-body">
-                        Panel content
+    <!-- 文章列表 开始 -->
+    <div class="article-list">
+        {% for article in page_list.object_list %}
+            <div class="article">
+                <h3>
+                    <a href="/article/{{ article.user.username }}/{{ article.pk }}/">{{ article.title }}</a>
+                </h3>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object author-img" src="/media/{{ article.user.avatar }}"
+                                 alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <p>{{ article.desc|safe }}</p>
                     </div>
                 </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">左侧广告位二</div>
-                    <div class="panel-body">
-                        Panel content
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <!-- 文章列表 开始 -->
-                <div class="article-list">
-                    {% for article in page_list.object_list %}
-                        <div class="article">
-                            <h3>
-                                <a href="/article/{{ article.user.username }}/{{ article.pk }}/">{{ article.title }}</a>
-                            </h3>
-                            <div class="media">
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="media-object author-img" src="/media/{{ article.user.avatar }}"
-                                             alt="...">
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p>{{ article.desc|safe }}</p>
-                                </div>
-                            </div>
-                            <div class="article-footer">
+                <div class="article-footer">
                                 <span><a
                                         href="/article/{{ article.user.username }}/">{{ article.user.username }}</a></span>发布于
-                                <span>{{ article.create_time|date:'Y-m-d H:i:s' }}</span>
-                                {#                            <span class="glyphicon glyphicon-comment">评论({{ article.comment_count }})</span>#}
-                                {#                            <span class="glyphicon glyphicon-thumbs-up">点赞({{ article.up_count }})</span>#}
-                                <span><i class="fa fa-commenting-o fa-fw"
-                                         aria-hidden="true"></i>评论({{ article.comment_count }})</span>
-                                <span><i class="fa fa-thumbs-o-up fa-fw"
-                                         aria-hidden="true"></i>点赞({{ article.up_count }})</span>
-                            </div>
-                            <hr>
-                        </div>
-                    {% endfor %}
-
-                    <div>
-                        <ul class="pagination ">
-                            {% if page_list.has_previous %}
-                                <li class="long"><a
-                                        href="?{{ page_list.previous_page_number.querystring }}">上一页</a>
-                                </li>
-                            {% endif %}
-                            {% for page in page_list.pages %}
-                                {% if page %}
-                                    {% ifequal page page_list.number %}
-                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a>
-                                        </li>
-                                    {% else %}
-                                        <li><a href="?{{ page.querystring }}">{{ page }}</a>
-                                    {% endifequal %}
-                                {% else %}
-                                    <li class="none"><a href="">...</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            {% if page_list.has_next %}
-                                <li class="long"><a
-                                        href="?{{ page_list.next_page_number.querystring }}">下一页</a></li>
-                            {% endif %}
-                        </ul>
-
-                    </div>
-
+                    <span>{{ article.create_time|date:'Y-m-d H:i:s' }}</span>
+                    {#                            <span class="glyphicon glyphicon-comment">评论({{ article.comment_count }})</span>#}
+                    {#                            <span class="glyphicon glyphicon-thumbs-up">点赞({{ article.up_count }})</span>#}
+                    <span><i class="fa fa-commenting-o fa-fw"
+                             aria-hidden="true"></i>评论({{ article.comment_count }})</span>
+                    <span><i class="fa fa-thumbs-o-up fa-fw"
+                             aria-hidden="true"></i>点赞({{ article.up_count }})</span>
                 </div>
+                <hr>
             </div>
+        {% endfor %}
 
-            <div class="col-md-2">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">右侧广告位一</div>
-                    <div class="panel-body">
-                        Panel content
-                    </div>
-                </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">右侧广告位二</div>
-                    <div class="panel-body">
-                        Panel content
-                    </div>
-                </div>
-            </div>
+        <div>
+            <ul class="pagination ">
+                {% if page_list.has_previous %}
+                    <li class="long"><a
+                            href="?{{ page_list.previous_page_number.querystring }}">上一页</a>
+                    </li>
+                {% endif %}
+                {% for page in page_list.pages %}
+                    {% if page %}
+                        {% ifequal page page_list.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a>
+                            </li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}">{{ page }}</a>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none"><a href="">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_list.has_next %}
+                    <li class="long"><a
+                            href="?{{ page_list.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+
         </div>
-
-        <
     </div>
 {% endblock content %}
 

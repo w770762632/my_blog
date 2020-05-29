@@ -14,12 +14,15 @@ if __name__ == '__main__':
     from article import models
     from django.db.models import Count
 
-    user = models.UserInfo.objects.filter(nid=13).first()
+    user = models.UserInfo.objects.filter(nid=14).first()
     print(user)
     # ret = models.Article.objects.create(title='111111', desc='22222', user__id=user)
     # print(ret)
     # ret = models.Article.objects.filter(user__nid=13)
     # print(ret)
     blog = user.blog
-    category_list = models.Category.objects.filter(blog__userinfo__nid=13).annotate(c=Count("article")).values("title", "c")
+    print(blog)
+    category_list = models.Category.objects.filter(blog__userinfo__nid=14).annotate(c=Count("article")).values("title", "c")
+    print(category_list)
+    category_list = models.Category.objects.filter(blog__pk=1).annotate(c=Count("article")).values("title", "c")
     print(category_list)

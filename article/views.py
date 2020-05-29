@@ -5,6 +5,7 @@ from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from article import models
 from article import myforms
 import logging
+import markdown
 
 logger = logging.getLogger(__name__)
 
@@ -90,24 +91,24 @@ def get_valid_img(request):
 def index(request):
     try:
         page = request.GET.get('page', 1)
-        print(page, type(page))
     except PageNotAnInteger:
         page = 1
     article_list = models.Article.objects.all()
     # print(request.user.username)
 
-    p = Paginator(article_list, 3, )
+    p = Paginator(article_list, 4, )
     laws = p.page(page)
-    print(laws)
-    print(locals())
     return render(request, 'index.html', locals())
 
 
 def login(request):
+    next = request.GET.get('next', '')
+    print(next)
     if request.method == 'POST':
         ret = {"status": 0, "msg": ""}
         user = request.POST.get('username')
         password = request.POST.get('password')
+
         valid_code = request.POST.get('valid_code')
         print(valid_code, '*' * 120)
         if user:
@@ -116,7 +117,10 @@ def login(request):
                     user_obj = auth.authenticate(username=user, password=password)
                     if user_obj:
                         auth.login(request, user_obj)
-                        ret["msg"] = "/index/"
+                        if next:
+                            ret["msg"] = next
+                        else:
+                            ret["msg"] = "/index/"
                     else:
                         ret['status'] = '1'
                         ret['msg'] = '用户名或密码错误'
@@ -165,6 +169,10 @@ def logout(request):
     return redirect("/login/")
 
 
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
 def home(request, user):
     username = models.UserInfo.objects.filter(username=user).first()
     if not username:
@@ -189,8 +197,14 @@ def article_detail(request, user, pk):
     # 找到当前的文章
     article_obj = models.Article.objects.filter(pk=pk).first()
 
+    article_obj.articledetail.content = markdown.markdown(article_obj.articledetail.content,
+                                                          extensions=[
+                                                              # 包含 缩写、表格等常用扩展
+                                                              'markdown.extensions.extra',
+                                                              # 语法高亮扩展
+                                                              'markdown.extensions.codehilite',
+                                                          ])
     # 所有评论列表
-
     comment_list = models.Comment.objects.filter(article_id=pk)
 
     return render(
@@ -203,3 +217,21 @@ def article_detail(request, user, pk):
             "comment_list": comment_list
         }
     )
+
+
+def article_add(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('article_content')
+        user = request.user
+        from bs4 import BeautifulSoup
+        bs = BeautifulSoup(content, 'html.parser')
+        if len(bs) > 150:
+            desc = bs.text[0:150] + "..."
+        else:
+            desc = bs.text[0:150]
+        article_obj = models.Article.objects.create(user=user, desc=desc, title=title)
+        models.ArticleDetail.objects.create(content=content, article_id=article_obj.nid)
+        return HttpResponse('添加文章成功')
+
+    return render(request, 'add_article.html')
