@@ -21,14 +21,48 @@ from django.views.static import serve
 from django.conf import settings
 from django.shortcuts import render, HttpResponse, redirect
 
+from stark.service.stark import site
+
 
 def foo(request):
     return HttpResponse('ok')
 
 
 def test(request):
-    return render(request,'index2.html')
+    return render(request, 'index2.html')
 
+
+def get_urls():
+    temp = []
+    for model, admin_class in admin.site._registry.items():
+        model_name = model._meta.model_name
+        app_label = model._meta.app_label
+        temp.append(path(r'%s/%s/'%(app_label,model_name,), (get_urls2(),None,None)))
+
+        # temp.append((r'%s/5s'(model._meta.model_name,(model._meta.app_label)))
+    return temp
+
+def get_urls2():
+    temp = []
+    temp.append(re_path(r'^add/',add))
+    temp.append(re_path('^(\d+)/delete/',delete))
+    temp.append(re_path('^(\d+)/change/',change))
+    temp.append(re_path(r'^$',list_view))
+    return temp
+
+
+def add(request):
+    return HttpResponse('add')
+
+
+def delete(request,id):
+    return HttpResponse('delete')
+
+def change(request,id):
+    return HttpResponse('change')
+
+def list_view(request):
+    return HttpResponse('list_view')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +78,9 @@ urlpatterns = [
     path(r'index/', views.index),
     path(r'blog/', include(article_urls)),
     path('foo1/', foo, name='foo_name'),
-    path('test/', test,)
+    path(r'test/', (get_urls(), None,None)),
+    path(r'stark/', site.urls)
+
+
 
 ]

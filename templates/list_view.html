@@ -1,0 +1,58 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <a href="add/" class="btn bg-primary">添加数据</a>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    {% for header in header_list %}
+                        <td>{{header}}</td>
+                    {% endfor %}
+
+                </tr>
+                </thead>
+                <tbody>
+                    {% for item in new_data_list %}
+                    <tr>
+                        {% for foo in  item%}
+                            <td>{{ foo }}</td>
+                        {% endfor %}
+                        
+                         </tr>
+                    {% endfor %}
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<!-- 引入bootstrap的js文件 -->
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script>
+    $('.check').click(function () {
+        if ($(this).prop('checked',)){
+            $('.check_item').prop('checked',true)
+        }
+        else {
+            $('.check_item').prop('checked',false)
+        }
+
+    })
+</script>
+</html>

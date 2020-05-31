@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'article',
-    'pure_pagination'
+    'article.apps.ArticleConfig',
+    'pure_pagination',
+    'stark.apps.StarkConfig'
 ]
 
 MIDDLEWARE = [

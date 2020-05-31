@@ -9,7 +9,7 @@ class UserInfo(AbstractUser):
     """
     用户信息表
     """
-    nid = models.AutoField(primary_key=True)
+    nid = models.AutoField('序号',primary_key=True)
     phone = models.CharField(max_length=11, null=True, unique=True)
     avatar = models.FileField(upload_to="avatars/", default="avatars/default.png", verbose_name="头像")
     create_time = models.DateTimeField(auto_now_add=True)
@@ -78,8 +78,8 @@ class Article(models.Model):
     文章
     """
     nid = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50, verbose_name="文章标题")  # 文章标题
-    desc = models.CharField(max_length=255)  # 文章描述
+    title = models.CharField(verbose_name="文章标题",max_length=50)  # 文章标题
+    desc = models.CharField(max_length=255,verbose_name='文章描述')  # 文章描述
     create_time = models.DateTimeField(auto_now_add=True)  # 创建时间  --> datetime()
 
     # 评论数
