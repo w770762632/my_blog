@@ -10,7 +10,6 @@ def get_left_menu(username=None):
     if username:
         user = models.UserInfo.objects.filter(username=username).first()
         blog = user.blog
-        print(blog)
         # 查询文章分类及对应的文章数
         category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title", "c")
         # 查文章标签及对应的文章数

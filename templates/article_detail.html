@@ -90,9 +90,10 @@
         <div class="col-md-8">
             <!-- 文章列表 开始 -->
                 <div class="article-detail">
-                <h1>{{ article.title | truncatechars:20 }}</h1>
+                    <a href="{% url 'article:article_del'  article_obj.pk %}">删除文章</a>
+                <h1>{{ article_obj.title | truncatechars:20 }}</h1>
 
-                <p>{{ article.articledetail.content|safe }}</p>
+                <p>{{ content|safe }}</p>
             </div>
 
             </div>

@@ -93,7 +93,7 @@ def index(request):
         page = request.GET.get('page', 1)
     except PageNotAnInteger:
         page = 1
-    article_list = models.Article.objects.all()
+    article_list = models.Article.objects.all().order_by('-create_time')
     # print(request.user.username)
 
     p = Paginator(article_list, 4, )
@@ -103,7 +103,6 @@ def index(request):
 
 def login(request):
     next = request.GET.get('next', '')
-    print(next)
     if request.method == 'POST':
         ret = {"status": 0, "msg": ""}
         user = request.POST.get('username')
@@ -141,11 +140,9 @@ def register(request):
     if request.method == 'POST':
         ret = {'statue': 0, 'msg': ''}
         form_obj = myforms.RegForm(request.POST)
-        print(request.POST)
         if form_obj.is_valid():
             form_obj.cleaned_data.pop('re_password')
             avatar_img = request.FILES.get('avatar')
-            print(avatar_img)
             if avatar_img:
                 models.UserInfo.objects.create_user(**form_obj.cleaned_data, avatar=avatar_img)
             else:
@@ -160,7 +157,6 @@ def register(request):
             print("=" * 120)
             return JsonResponse(ret)
     form_obj = myforms.RegForm()
-    print(form_obj.fields)
     return render(request, "register.html", {"form_obj": form_obj})
 
 
@@ -197,7 +193,9 @@ def article_detail(request, user, pk):
     # 找到当前的文章
     article_obj = models.Article.objects.filter(pk=pk).first()
 
-    article_obj.articledetail.content = markdown.markdown(article_obj.articledetail.content,
+    # conenet  = models.ArticleDetail.objects.filter(article=article_obj)
+
+    content = markdown.markdown(article_obj.articledetail.content,
                                                           extensions=[
                                                               # 包含 缩写、表格等常用扩展
                                                               'markdown.extensions.extra',
@@ -210,12 +208,7 @@ def article_detail(request, user, pk):
     return render(
         request,
         "article_detail.html",
-        {
-            "username": user,
-            "article": article_obj,
-            "blog": blog,
-            "comment_list": comment_list
-        }
+        locals()
     )
 
 
@@ -232,6 +225,10 @@ def article_add(request):
             desc = bs.text[0:150]
         article_obj = models.Article.objects.create(user=user, desc=desc, title=title)
         models.ArticleDetail.objects.create(content=content, article_id=article_obj.nid)
-        return HttpResponse('添加文章成功')
+        return redirect('/index/')
 
     return render(request, 'add_article.html')
+
+def article_del(request,pk):
+    models.Article.objects.filter(pk=pk).delete()
+    return redirect('/index/')
